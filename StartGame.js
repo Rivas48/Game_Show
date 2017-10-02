@@ -45,3 +45,77 @@ function addPhraseToDisplay(arr){
 
 	}
 }
+
+
+
+
+function checkLetter(arr) {
+	 	for (var i = 0 ; i < letter.length;i++ ) {
+ 		var BUTTONS = arr ;
+ 		var letterListItem = letter[i]
+ 		var displayLetter = letterListItem.innerHTML;
+ 		var buttonLetter = BUTTONS.innerHTML;
+ 		arr.setAttribute("disabled", "true");
+
+	 	if ( buttonLetter === displayLetter ){
+	 		letter[i].classList.add("show");
+	 		BUTTONS.classList.add("chosen");
+	 		var letterFound = buttonLetter;
+
+	 	}else{
+	 		BUTTONS.classList.add("chosen");	 
+	 			 }
+			}
+	if (letterFound) {
+    return letterFound;
+	} else {
+    console.log("THIS IS INCREDIBLY SAD");
+    return null;
+	}
+	checkWin();
+};
+	
+
+function checkWin() {
+  let letters = document.getElementsByClassName('letter').length;
+  let matches = document.getElementsByClassName('show').length;
+  if (matches === letters) {
+  	start.style.display = "flex";
+   start.className = "win a";
+   startGame.addEventListener("click", (e) => {
+	window.location.reload();
+});
+  } else if (missed === 5) {
+  	start.style.display = "flex";
+   start.className = "lose a";
+   startGame.addEventListener("click", (e) => {
+	window.location.reload();
+});
+  }
+
+
+}
+
+qwerty.addEventListener('click', (event) => {
+  if (event.target.tagName == "BUTTON") {
+    let button = event.target;
+    console.log("Button " + button.textContent + " Clicked")
+    button.classList.add("chosen");
+    let letterFound = checkLetter(button);
+    checkWin();
+    
+    // Scoring
+    if (letterFound == null) {
+      tries[missed].innerHTML = '<img src="lostHeart.png" />';
+
+      missed++; 
+      checkWin();
+      console.log("You've now missed " + missed);
+    }
+    
+  }
+});
+
+
+	
+
