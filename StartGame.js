@@ -1,19 +1,18 @@
-var qwerty = document.getElementById('qwerty');
-var missed = 0;
-var startGame = document.querySelector('.btn__reset');
-const Phrases = ["a dime a dozen", "keep on truckin", "photo finish", "all greek to me", "break a leg"];
-var button = document.getElementsByTagName('button');
-var keyboard = document.getElementsByClassName('keyrow');
-const tries = document.getElementsByClassName('tries')
-var letter = document.getElementsByClassName('letter');	 	
-var start = document.getElementById('overlay');
+var qwerty = document.getElementById('qwerty'),
+missed = 0,
+startGame = document.querySelector('.btn__reset'),
+button = document.getElementsByTagName('button'),
+keyboard = document.getElementsByClassName('keyrow'),
+letter = document.getElementsByClassName('letter'),	 	
+start = document.getElementById('overlay'),
+start = document.getElementById('overlay'),
+title = document.querySelector('title');
+const Phrases = ["a dime a dozen", "keep on truckin", "photo finish", "all greek to me", "break a leg"],
+tries = document.getElementsByClassName('tries');
 
 
 startGame.addEventListener("click", (e) => {
-var start = document.getElementById('overlay');
-var title = document.querySelector('title');
 start.style.display = 'none';
-
 });
 
 function getRandomPhraseAsArray(arr){
@@ -23,58 +22,60 @@ var phrases = phrases.split('');
 	getRandomPhraseAsArray(Phrases);
 }
 
+function createListItem(arr,index){
+	var list = document.getElementById('phrase');
+	var createListItem = document.createElement('li');
+	var value = document.createTextNode(arr)
+	var create = list.appendChild(createListItem);
+	var words = create.appendChild(value);
+	var liContent =list.getElementsByTagName('li')[index];
+	var liNoContent =list.getElementsByTagName('li')[index].innerHTML
+	return [liContent,liNoContent];
+}
+
 const phraseArray = getRandomPhraseAsArray(Phrases);
 addPhraseToDisplay(phraseArray);
 
 function addPhraseToDisplay(arr){
-	for (i=0 ; i < arr.length  ; i++) {
-		var list = document.getElementById('phrase');
-		var createListItem = document.createElement('li');
-		var value = document.createTextNode(phraseArray[i])
-		var create = list.appendChild(createListItem);
-		var words = create.appendChild(value);
-		var liContent =list.getElementsByTagName('li')[i]
-		var liNoContent =list.getElementsByTagName('li')[i].innerHTML
-		if (liNoContent !== " "){
-			liContent.className = "letter";
-		}
-			if (liNoContent === " "){
-				liContent.className = "space";
-			}
-		
+	console.log(arr)
+	arr.map(function(arr,index){
+		var content = createListItem(arr,index);
 
-	}
+		if (content[1] !== " "){
+			content[0].className = "letter";
+		}
+		if (content[1] === " "){
+			content[0].className = "space";
+		}
+	})
 }
 
-
-
-
 function checkLetter(arr) {
-	 	for (var i = 0 ; i < letter.length;i++ ) {
- 		var BUTTONS = arr ;
- 		var letterListItem = letter[i]
- 		var displayLetter = letterListItem.innerHTML;
- 		var buttonLetter = BUTTONS.innerHTML;
- 		arr.setAttribute("disabled", "true");
-
-	 	if ( buttonLetter === displayLetter ){
-	 		letter[i].classList.add("show");
-	 		BUTTONS.classList.add("chosen");
-	 		var letterFound = buttonLetter;
-
-	 	}else{
-	 		BUTTONS.classList.add("chosen");	 
-	 			 }
-			}
-	if (letterFound) {
-    return letterFound;
-	} else {
-    console.log("THIS IS INCREDIBLY SAD");
-    return null;
-	}
-	checkWin();
-};
-	
+		var hello = Array.from(document.querySelectorAll('.letter')),
+		ButtonsPressed = arr,
+		letterFound,
+	 	buttonLetterPressed = RegExp(ButtonsPressed.innerHTML,'g');
+	 	ButtonsPressed.setAttribute("disabled", "true");
+	 	if(buttonLetterPressed.test(phraseArray.join(''))){
+ 		hello.map(function(letter){
+ 			if(letter.innerHTML === ButtonsPressed.innerHTML){
+ 				letter.classList.add("show")
+ 				ButtonsPressed.classList.add("chosen");
+ 				var letterFound = true;
+ 				return letterFound;
+ 			}else{
+ 				ButtonsPressed.classList.add("chosen");
+ 				var letterNotFound = false;
+ 				return letterFound;
+ 			}
+ 		})
+ 		}else{
+ 			var letterNotFound = false;
+ 			tries[missed].innerHTML = '<img src="lostHeart.png" />';
+     		missed++; 
+ 			checkWin();
+ 		};
+ 	}
 
 function checkWin() {
   let letters = document.getElementsByClassName('letter').length;
@@ -92,8 +93,6 @@ function checkWin() {
 	window.location.reload();
 });
   }
-
-
 }
 
 qwerty.addEventListener('click', (event) => {
@@ -103,19 +102,6 @@ qwerty.addEventListener('click', (event) => {
     button.classList.add("chosen");
     let letterFound = checkLetter(button);
     checkWin();
-    
-    // Scoring
-    if (letterFound == null) {
-      tries[missed].innerHTML = '<img src="lostHeart.png" />';
-
-      missed++; 
-      checkWin();
-      console.log("You've now missed " + missed);
-    }
-    
   }
 });
-
-
-	
 
